@@ -1,15 +1,33 @@
-﻿using System;
+﻿using AutoMapper;
+using FluentValidation.AspNetCore;
+using MediatR;
+using MediatR.Pipeline;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+using RpMan.Application.Customers.Commands.CreateCustomer;
+using RpMan.Application.Customers.Queries.GetCustomersList;
+using RpMan.Application.Infrastructure;
+using RpMan.Application.Infrastructure.AutoMapper;
+using RpMan.Application.Interfaces;
+using RpMan.Common;
+using RpMan.Infrastructure;
+using RpMan.Persistence;
+using RpMan.WebApi.Filters;
+
 
 namespace RpMan.WebApi
 {
@@ -25,7 +43,37 @@ namespace RpMan.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            // Add AutoMapper
+            services.AddAutoMapper(new Assembly[] { typeof(AutoMapperProfile).GetTypeInfo().Assembly });
+
+            // Add framework services.
+            services.AddTransient<INotificationService, NotificationService>();   //TODO: see what the purpose of this 'notification' is all about
+            services.AddTransient<IDateTime, MachineDateTime>();
+
+            // Add MediatR
+
+            // TODO: sort out this duplicate, not a problem in RpMan
+            // *** not sure the purpose of line below as mediatR works without it! In fact with it the "RequestLogger.cs" fires twice!
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddMediatR(typeof(GetCustomersListQueryHandler).GetTypeInfo().Assembly);
+
+            // Add DbContext using SQL Server Provider
+            services.AddDbContext<RpManDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("RpManDatabase")));
+
+            services
+                .AddMvc(options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateCustomerCommandValidator>());
+
+            // Customise default API behavour
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;   // stop Automatic model state validation
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +82,7 @@ namespace RpMan.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -42,7 +91,20 @@ namespace RpMan.WebApi
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            app.UseSwaggerUi3(settings =>
+            {
+                settings.Path = "/api";
+                settings.DocumentPath = "/api/specification.json";
+            });
+
+            // app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action=Index}/{id?}");
+            });
         }
     }
 }

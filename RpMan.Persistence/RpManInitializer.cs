@@ -26,14 +26,14 @@ namespace RpMan.Persistence
         {
             context.Database.EnsureCreated();
 
-            if (context.Users.Any())   // if (context.Customers.Any())
+            if (context.Customers.Any())
             {
                 return; // Db has been seeded
             }
-            /*
 
             SeedCustomers(context);
 
+            /*
             SeedRegions(context);
 
             SeedTerritories(context);
@@ -50,8 +50,9 @@ namespace RpMan.Persistence
 
             SeedOrders(context);
             */
+
         }
-        /*
+
         public void SeedCustomers(RpManDbContext context)
         {
             var customers = new[]
@@ -154,6 +155,7 @@ namespace RpMan.Persistence
             context.SaveChanges();
         }
 
+/*
         private void SeedRegions(RpManDbContext context)
         {
             var regions = new[]
@@ -168,7 +170,6 @@ namespace RpMan.Persistence
 
             context.SaveChanges();
         }
-
         private void SeedTerritories(RpManDbContext context)
         {
             var territories = new[]
@@ -232,7 +233,6 @@ namespace RpMan.Persistence
 
             context.SaveChanges();
         }
-
         private void SeedEmployees(RpManDbContext context)
         {
             Employees.Add(2,
@@ -515,7 +515,6 @@ namespace RpMan.Persistence
 
             context.SaveChanges();
         }
-
         private void SeedCategories(RpManDbContext context)
         {
             Categories.Add(1, new Category
@@ -581,7 +580,6 @@ namespace RpMan.Persistence
 
             context.SaveChanges();
         }
-
         private void SeedShippers(RpManDbContext context)
         {
             Shippers.Add(1, new Shipper { CompanyName = "Speedy Express", Phone = "(503) 555-9831" });
@@ -595,7 +593,6 @@ namespace RpMan.Persistence
 
             context.SaveChanges();
         }
-
         private void SeedSuppliers(RpManDbContext context)
         {
             Suppliers.Add(1, new Supplier { CompanyName = "Exotic Liquids", ContactName = "Charlotte Cooper", ContactTitle = "Purchasing Manager", Address = "49 Gilbert St.", City = "London", PostalCode = "EC1 4SD", Fax = "", Phone = "(171) 555-2222", HomePage = "" });
@@ -635,7 +632,6 @@ namespace RpMan.Persistence
 
             context.SaveChanges();
         }
-
         private void SeedProducts(RpManDbContext context)
         {
             Products.Add(1, new Product { ProductName = "Chai", Supplier = Suppliers[1], Category = Categories[1], QuantityPerUnit = "10 boxes x 20 bags", UnitPrice = 18.00m, UnitsInStock = 39, UnitsOnOrder = 0, ReorderLevel = 10, Discontinued = false });
@@ -723,7 +719,6 @@ namespace RpMan.Persistence
 
             context.SaveChanges();
         }
-
         private void SeedOrders(RpManDbContext context)
         {
             var orders = new List<Order>
@@ -16981,7 +16976,8 @@ namespace RpMan.Persistence
 
             context.SaveChanges();
         }
-        */
+*/
+
         private static byte[] StringToByteArray(string hex)
         {
             return Enumerable.Range(0, hex.Length)

@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace RpMan.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class ValuesController : ControllerBase
+    // [ApiController]
+    public class ValuesController : RpManControllerBase
     {
         // GET api/values
         [HttpGet]
@@ -21,7 +21,7 @@ namespace RpMan.WebApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value";
+            return "value"+id.ToString();
         }
 
         // POST api/values
