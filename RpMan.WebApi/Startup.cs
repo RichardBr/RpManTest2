@@ -54,7 +54,7 @@ namespace RpMan.WebApi
 
             // TODO: sort out this duplicate, not a problem in RpMan
             // *** not sure the purpose of line below as mediatR works without it! In fact with it the "RequestLogger.cs" fires twice!
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));

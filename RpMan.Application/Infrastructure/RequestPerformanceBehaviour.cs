@@ -32,7 +32,7 @@ namespace RpMan.Application.Infrastructure
 
                 // TODO: Add User Details
 
-                _logger.LogWarning("RpMan Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}", name, _timer.ElapsedMilliseconds, request);
+                _logger.LogWarning("*** RpMan Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}", name, _timer.ElapsedMilliseconds, request);
             }
 
             return response;
