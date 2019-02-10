@@ -25,4 +25,5 @@ Do this by running command dotnet command below in termainal window console. Rem
 
 dotnet ef dbcontext scaffold "Server=.;Database=RpMan;Integrated Security=true;" Microsoft.EntityFrameworkCore.SqlServer -o ReverseDbData --context-dir ReverseDbData\Context -c RpManDbContext -f
 
-
+Then to get it to conform to correct namespaces to a project wide find & replace 
+- Find "R pMan.Persistence.ReverseDbData" and replace with "RpMan.Domain.Entities"
