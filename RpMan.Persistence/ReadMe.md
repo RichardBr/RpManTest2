@@ -19,8 +19,8 @@ Do this by running command "update-database --verbose" in package manager consol
 
 
 
-Reverse Generat Existing DB
-===========================
+Reverse Generate Existing DB
+============================
 Do this by running command dotnet command below in termainal window console. Remember to select Persistence project.
 
 dotnet ef dbcontext scaffold "Server=.;Database=RpMan;Integrated Security=true;" Microsoft.EntityFrameworkCore.SqlServer -o ReverseDbData --context-dir ReverseDbData\Context -c RpManDbContext -f

@@ -20,17 +20,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{4AC22109-874E-4F5E-90F3-7E04371B9860}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpMan.Common", "RpMan.Common\RpMan.Common.csproj", "{245CCD97-6FCA-4FFD-AA3D-D5D7A376A5B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpMan.Common", "RpMan.Common\RpMan.Common.csproj", "{245CCD97-6FCA-4FFD-AA3D-D5D7A376A5B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpMan.Application", "RpMan.Application\RpMan.Application.csproj", "{6E1E8FF9-CC70-42D9-84C5-24A7DC52ED12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpMan.Application", "RpMan.Application\RpMan.Application.csproj", "{6E1E8FF9-CC70-42D9-84C5-24A7DC52ED12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpMan.Domain", "RpMan.Domain\RpMan.Domain.csproj", "{DB476736-E1E5-4BCB-A4F2-81CF15E5E0A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpMan.Domain", "RpMan.Domain\RpMan.Domain.csproj", "{DB476736-E1E5-4BCB-A4F2-81CF15E5E0A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpMan.Infrastructure", "RpMan.Infrastructure\RpMan.Infrastructure.csproj", "{4500D151-C8BA-48BC-A72E-2B18FD66F4F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpMan.Infrastructure", "RpMan.Infrastructure\RpMan.Infrastructure.csproj", "{4500D151-C8BA-48BC-A72E-2B18FD66F4F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpMan.Persistence", "RpMan.Persistence\RpMan.Persistence.csproj", "{1CE3DC86-F689-4883-B60B-1CFB7B500321}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpMan.Persistence", "RpMan.Persistence\RpMan.Persistence.csproj", "{1CE3DC86-F689-4883-B60B-1CFB7B500321}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpMan.WebApi", "RpMan.WebApi\RpMan.WebApi.csproj", "{FB2DDFC2-8C9C-417C-A06E-E9423390D0BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpMan.WebApi", "RpMan.WebApi\RpMan.WebApi.csproj", "{FB2DDFC2-8C9C-417C-A06E-E9423390D0BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Batch", "Batch", "{0A5BC734-B25C-4746-A383-140681B658FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpMan.ConsoleApp", "RpMan.ConsoleApp\RpMan.ConsoleApp.csproj", "{9F400BEF-ECBA-4898-B3DA-1C66E674D4E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +66,10 @@ Global
 		{FB2DDFC2-8C9C-417C-A06E-E9423390D0BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB2DDFC2-8C9C-417C-A06E-E9423390D0BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB2DDFC2-8C9C-417C-A06E-E9423390D0BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F400BEF-ECBA-4898-B3DA-1C66E674D4E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F400BEF-ECBA-4898-B3DA-1C66E674D4E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F400BEF-ECBA-4898-B3DA-1C66E674D4E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F400BEF-ECBA-4898-B3DA-1C66E674D4E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +85,8 @@ Global
 		{4500D151-C8BA-48BC-A72E-2B18FD66F4F8} = {869FA778-68D5-4F75-AC27-51D368E33306}
 		{1CE3DC86-F689-4883-B60B-1CFB7B500321} = {869FA778-68D5-4F75-AC27-51D368E33306}
 		{FB2DDFC2-8C9C-417C-A06E-E9423390D0BF} = {4AC22109-874E-4F5E-90F3-7E04371B9860}
+		{0A5BC734-B25C-4746-A383-140681B658FE} = {87B71A6D-83E7-4955-95C2-0891489C175D}
+		{9F400BEF-ECBA-4898-B3DA-1C66E674D4E5} = {0A5BC734-B25C-4746-A383-140681B658FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CEEB9A44-6C5B-412A-AE6A-F310655634D9}
