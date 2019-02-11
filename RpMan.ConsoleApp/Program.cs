@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RpMan.ConsoleApp
 {
@@ -13,7 +15,11 @@ namespace RpMan.ConsoleApp
              * 
              */
 
+            GenerateEntityConfigFiles.process();
+
             Console.WriteLine("Hello World!");
         }
+
+
     }
 }

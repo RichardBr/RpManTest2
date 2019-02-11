@@ -22,7 +22,8 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="ReverseDbData\" />
+    <Folder Include="ReverseDbData\Context\Configuration\" />
+    <Folder Include="ReverseDbData\Entities\" />
   </ItemGroup>
 
 </Project>
