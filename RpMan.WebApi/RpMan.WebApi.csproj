@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="12.0.13" />
     <PackageReference Include="NSwag.MSBuild" Version="12.0.13">
       <PrivateAssets>all</PrivateAssets>
@@ -23,6 +24,10 @@
     <ProjectReference Include="..\RpMan.Application\RpMan.Application.csproj" />
     <ProjectReference Include="..\RpMan.Common\RpMan.Common.csproj" />
     <ProjectReference Include="..\RpMan.Infrastructure\RpMan.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dtos\" />
   </ItemGroup>
 
 </Project>

@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using Microsoft.Extensions.DependencyInjection;
 using RpMan.Persistence;
 using Microsoft.EntityFrameworkCore;
+using RpMan.Domain.Entities;
 
 namespace RpMan.WebApi
 {
@@ -29,7 +31,10 @@ namespace RpMan.WebApi
                     var context = scope.ServiceProvider.GetService<RpManDbContext>();
                     context.Database.Migrate();
 
-                    RpManInitializer.Initialize(context);
+                    var userManager = scope.ServiceProvider.GetService<UserManager<User>>();
+                    var roleManager = scope.ServiceProvider.GetService<RoleManager<Role>>();
+
+                    RpManInitializer.Initialize(context, userManager, roleManager);
                 }
                 catch (Exception ex)
                 {

@@ -7,23 +7,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
+using Microsoft.IdentityModel.Tokens;
 using RpMan.Application.Customers.Commands.CreateCustomer;
 using RpMan.Application.Customers.Queries.GetCustomersList;
 using RpMan.Application.Infrastructure;
 using RpMan.Application.Infrastructure.AutoMapper;
 using RpMan.Application.Interfaces;
 using RpMan.Common;
+using RpMan.Domain.Entities;
 using RpMan.Infrastructure;
 using RpMan.Persistence;
 using RpMan.WebApi.Filters;
@@ -65,7 +71,13 @@ namespace RpMan.WebApi
                 options.UseSqlServer(Configuration.GetConnectionString("RpManDatabase")));
 
             services
-                .AddMvc(options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))
+                .AddMvc(options =>
+                {
+                    options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+
+                    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                    options.Filters.Add(new AuthorizeFilter(policy)); // This means all controllers will have an impicit [Authorize]
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateCustomerCommandValidator>());
 
@@ -73,6 +85,31 @@ namespace RpMan.WebApi
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;   // stop Automatic model state validation
+            });
+
+
+            IdentityBuilder identityBuilder = services.AddIdentityCore<User>(opt =>
+            {
+                // below is not recommended. Just done to allow weak password during testing!
+                opt.Password.RequireDigit = false;
+                opt.Password.RequiredLength = 4;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireUppercase = false;
+            });
+            identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(Role), identityBuilder.Services);
+            identityBuilder.AddEntityFrameworkStores<RpManDbContext>();
+            identityBuilder.AddRoleValidator<RoleValidator<Role>>();
+            identityBuilder.AddRoleManager<RoleManager<Role>>();
+            identityBuilder.AddSignInManager<SignInManager<User>>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
             });
         }
 
@@ -98,6 +135,7 @@ namespace RpMan.WebApi
                 settings.DocumentPath = "/api/specification.json";
             });
 
+            app.UseAuthentication();
             // app.UseMvc();
             app.UseMvc(routes =>
             {

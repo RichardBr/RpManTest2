@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using RpMan.Domain.Entities;
+using RpMan.Domain.ValueObjects;
 using RpMan.Persistence.Extensions;
 
 namespace RpMan.Persistence
 {
     public class RpManInitializer
     {
+
         /*
         private readonly Dictionary<int, Employee> Employees = new Dictionary<int, Employee>();
         private readonly Dictionary<int, Supplier> Suppliers = new Dictionary<int, Supplier>();
@@ -16,20 +19,24 @@ namespace RpMan.Persistence
         private readonly Dictionary<int, Product> Products = new Dictionary<int, Product>();
         */
 
-        public static void Initialize(RpManDbContext context)
+        public static void Initialize(RpManDbContext context
+            , UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             var initializer = new RpManInitializer();
-            initializer.SeedEverything(context);
+            initializer.SeedEverything(context, userManager, roleManager);
         }
 
-        public void SeedEverything(RpManDbContext context)
+        public void SeedEverything(RpManDbContext context
+            , UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             context.Database.EnsureCreated();
 
-            if (context.Customers.Any())
+            if (userManager.Users.Any())
             {
                 return; // Db has been seeded
             }
+
+            SeedUsers(userManager, roleManager);
 
             SeedCustomers(context);
 
@@ -51,6 +58,44 @@ namespace RpMan.Persistence
             SeedOrders(context);
             */
 
+        }
+
+        public void SeedUsers(UserManager<User> userManager, RoleManager<Role> roleManager)
+        {
+            var users = new[]
+            {
+                new User { UserName = "User001" },
+                new User { UserName = "User002" },
+                new User { UserName = "User003" },
+                new User { UserName = "Admin001" },
+                new User { UserName = "Admin002" },
+            };
+
+            var roles = new List<Role>
+            {
+                new Role{Name="Member"},
+                new Role{Name="Admin"},
+                new Role{Name="Moderator"},
+                new Role{Name="VIP"},
+            };
+
+            foreach (var role in roles)
+            {
+                roleManager.CreateAsync(role).Wait();
+            }
+
+            foreach (var user in users)
+            {
+                var account = AdAccount.For("SSW\\Jason");
+                user.AdAccount = account;
+
+                userManager.CreateAsync(user, "password").Wait();
+                if (user.UserName.StartsWith("Admin")) {
+                    userManager.AddToRolesAsync(user, new[] { "Admin", "Moderator" }).Wait();
+                } else {
+                    userManager.AddToRoleAsync(user, "Member").Wait();
+                }
+            }
         }
 
         public void SeedCustomers(RpManDbContext context)

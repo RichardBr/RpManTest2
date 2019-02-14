@@ -6,15 +6,18 @@ using RpMan.Application.Customers.Commands.UpdateCustomer;
 using RpMan.Application.Customers.Commands.CreateCustomer;
 using RpMan.Application.Customers.Commands.DeleteCustomer;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace RpMan.WebApi.Controllers
 {
     [Route("api/[controller]/[action]")]
+    [Authorize(Roles = "Member,Admin,Moderator,VIP")]
     public class CustomersController : RpManControllerBase
     {
         // GET api/customers
         [HttpGet]
+        [Authorize(Roles = "Member")]
         public async Task<ActionResult<CustomersListViewModel>> GetAll()
         {
             return Ok(await Mediator.Send(new GetCustomersListQuery()));
@@ -22,6 +25,7 @@ namespace RpMan.WebApi.Controllers
 
         // GET api/customers/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CustomerDetailModel>> Get(string id)
         {
             return Ok(await Mediator.Send(new GetCustomerDetailQuery { Id = id }));
