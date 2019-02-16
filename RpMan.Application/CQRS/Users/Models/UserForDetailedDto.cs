@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
-using RpMan.Application.CQRS.User.Login;
 using RpMan.Application.Interfaces.Mapping;
+using RpMan.Domain.Entities;
 
-namespace RpMan.Application.CQRS.User.Register
+namespace RpMan.Application.CQRS.Users.Models
 {
     public class UserForDetailedDto : IHaveCustomMapping
     {
@@ -28,7 +28,7 @@ namespace RpMan.Application.CQRS.User.Register
              * configuration.CreateMap<Source, Destination>();
              */
 
-            configuration.CreateMap<Domain.Entities.User, UserForDetailedDto>();
+            configuration.CreateMap<User, UserForDetailedDto>();
         }
     }
 }

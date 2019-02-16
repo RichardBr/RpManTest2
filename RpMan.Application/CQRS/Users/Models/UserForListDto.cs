@@ -5,7 +5,7 @@ using AutoMapper;
 using RpMan.Application.Interfaces.Mapping;
 using RpMan.Domain.Entities;
 
-namespace RpMan.Application.CQRS.User.Login
+namespace RpMan.Application.CQRS.Users.Models
 {
     public class UserForListDto : IHaveCustomMapping
     {
@@ -27,7 +27,7 @@ namespace RpMan.Application.CQRS.User.Login
              * configuration.CreateMap<Source, Destination>();
              */
 
-            configuration.CreateMap<Domain.Entities.User, UserForListDto>();
+            configuration.CreateMap<User, UserForListDto>();
         }
     }
 }

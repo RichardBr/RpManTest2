@@ -12,8 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using RpMan.Application.CQRS.User.Login;
-using RpMan.Application.CQRS.User.Register;
+using RpMan.Application.CQRS.Users.Models;
 using RpMan.Domain.Entities;
 using RpMan.Persistence;
 

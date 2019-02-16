@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RpMan.Application.CQRS.User.Login
+namespace RpMan.WebApi.Dtos
 {
     public class UserForLoginDto
     {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using System.Reflection;
-using RpMan.Application.CQRS.User.Register;
+using RpMan.Application.CQRS.Users.Models;
 using RpMan.Domain.Entities;
 
 namespace RpMan.Application.Infrastructure.AutoMapper
@@ -17,6 +17,7 @@ namespace RpMan.Application.Infrastructure.AutoMapper
         private void LoadConverters()
         {
             CreateMap<UserForRegisterDto, User>();
+            CreateMap<RpMan.Application.CQRS.Users.Commands.RegisterUser.RegisterUserCommand, User>();
         }
 
         private void LoadStandardMappings()

@@ -6,16 +6,20 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using RpMan.Application.CQRS.User.Login;
-using RpMan.Application.CQRS.User.Register;
+using RpMan.Application.CQRS.Users.Models;
+using RpMan.Application.CQRS.Users.Commands.LoginUser;
+using RpMan.Application.CQRS.Users.Commands.RegisterUser;
+using RpMan.Application.Exceptions;
 using RpMan.Domain.Entities;
 using RpMan.Domain.ValueObjects;
+using RpMan.WebApi.Dtos;
 
 namespace RpMan.WebApi.Controllers
 {
@@ -65,10 +69,20 @@ namespace RpMan.WebApi.Controllers
                                      );
             }
 
-            return BadRequest(result.Errors);
+            IEnumerable<IdentityError> identityErrors = result.Errors;
+
+            return BadRequest(identityErrors);
         }
+        [HttpPost("register2")]
+        public async Task<IActionResult> Register2([FromBody]RegisterUserCommand command)
+        {
+            var userToReturn = await Mediator.Send(command);
 
-
+            return CreatedAtRoute(routeName: "GetUser"
+                , routeValues: new { controller = "Users", id = userToReturn.Id }
+                , value: userToReturn
+            );
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
@@ -90,6 +104,20 @@ namespace RpMan.WebApi.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [HttpPost("login2")]
+        public async Task<IActionResult> Login2(LoginUserCommand command)
+        {
+            var appUser = await Mediator.Send(command);
+
+            UserForListDto userToReturn = _mapper.Map<UserForListDto>(appUser);
+
+            return Ok(new
+            {
+                token = GenerateJwtToken(appUser).Result,
+                user = userToReturn
+            });
         }
 
         private async Task<string> GenerateJwtToken(User user)
