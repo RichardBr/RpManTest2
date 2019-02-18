@@ -31,48 +31,30 @@ namespace RpMan.WebApi.Filters
                 return;
             }
 
-            if (context.Exception is UserLoginException)
-            {
-                context.HttpContext.Response.ContentType = "application/json";
-                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                var resultObject = new
-                {
-                    Category = calledException.Name,
-                    context.Exception.Message,
-                    ((GenericException)context.Exception).Failures,
-                };
-                context.Result = new JsonResult(resultObject);
-
-                return;
-            }
-
-            //if (context.Exception is IdentityErrorException)
-            //{
-            //    context.HttpContext.Response.ContentType = "application/json";
-            //    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-            //    var resultObject = new
-            //    {
-            //        Category = calledException.Name,
-            //        context.Exception.Message,
-            //        ((IdentityErrorException)context.Exception).Failures,
-            //    };
-
-            //    context.Result = new JsonResult(resultObject);
-            //    return;
-            //}
-
             if (calledException.IsSubclassOf(typeof(GenericException)))
             {
                 context.HttpContext.Response.ContentType = "application/json";
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
                 var resultObject = new
                 {
                     Category = calledException.Name,
                     context.Exception.Message,
                     ((GenericException)context.Exception).Failures,
                 };
+
+                if (context.Exception is UserLoginException)
+                {
+                    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                }
+                else if (context.Exception is IdentityErrorException)
+                {
+                    resultObject = new
+                    {
+                        Category = calledException.Name,
+                        context.Exception.Message,
+                        ((IdentityErrorException)context.Exception).Failures,
+                    };
+                }
 
                 context.Result = new JsonResult(resultObject);
                 return;

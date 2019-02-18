@@ -33,6 +33,7 @@ using RpMan.Domain.Entities;
 using RpMan.Infrastructure;
 using RpMan.Persistence;
 using RpMan.WebApi.Filters;
+using RpMan.WebApi.Helpers;
 
 
 namespace RpMan.WebApi
@@ -76,10 +77,16 @@ namespace RpMan.WebApi
                     options.Filters.Add(typeof(CustomExceptionFilterAttribute));
 
                     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-                    options.Filters.Add(new AuthorizeFilter(policy)); // This means all controllers will have an impicit [Authorize]
+                    options.Filters.Add(new AuthorizeFilter(policy)); // This means all controllers will have an implicit [Authorize]
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateCustomerCommandValidator>());
+
+            // Api versioning
+            services.AddCustomizedApiVersioning();
+
+            // Add OpenAPI/Swagger document
+            services.AddCustomizedNSwag();
 
             // Customise default API behavour
             services.Configure<ApiBehaviorOptions>(options =>
@@ -120,6 +127,9 @@ namespace RpMan.WebApi
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+
+                // Add OpenAPI/Swagger middlewares
+                app.UseCustomizedNSwag();
             }
             else
             {
@@ -128,12 +138,6 @@ namespace RpMan.WebApi
             }
 
             app.UseHttpsRedirection();
-
-            app.UseSwaggerUi3(settings =>
-            {
-                settings.Path = "/api";
-                settings.DocumentPath = "/api/specification.json";
-            });
 
             app.UseAuthentication();
             // app.UseMvc();

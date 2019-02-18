@@ -9,19 +9,27 @@ namespace RpMan.WebApi.Controllers
 {
 
     //[Route("api/[controller]")]
-    [ApiVersion("2.0")]
-    [ApiVersion("1.0", Deprecated = true)]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("3.0")]
+    [ApiVersion("4.0")]
+    [Route("api/v{version:apiVersion}/values")]
     // [ApiController]
     [AllowAnonymous]
-    public class ValuesController : RpManControllerBase
+    public class Values2Controller : RpManControllerBase
     {
         // GET api/values
-        [HttpGet]
+        [HttpGet, MapToApiVersion("3.0")]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "value3-1", "value3-2" };
         }
+
+        [HttpGet, MapToApiVersion("4.0")]
+        //[HttpGet("GetV4")]
+        public ActionResult<IEnumerable<string>> GetV4()
+        {
+            return new string[] { "value4-1", "value4-2" };
+        }
+
 
         // GET api/values/5
         [HttpGet("{id}")]
