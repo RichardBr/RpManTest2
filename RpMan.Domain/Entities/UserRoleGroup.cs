@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
 
 namespace RpMan.Domain.Entities
 {
-    public class Role : IdentityRole<int>
+    public class UserRoleGroup
     {
-        public ICollection<UserRole> UserRoles { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+
         public ICollection<UserRoleGroupsRole> UserRoleGroupsRoles { get; set; }
     }
 }

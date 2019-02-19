@@ -15,6 +15,8 @@ namespace RpMan.Persistence
 
         public DbSet<Customer> Customers { get; set; }
         // public DbSet<User> Users { get; set; }  // Not required anymore as it will come ASPNET CORE Identity
+        public virtual DbSet<UserRoleGroup> UserRoleGroups { get; set; }
+        public virtual DbSet<UserRoleGroupsRole> UserRoleGroupsRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

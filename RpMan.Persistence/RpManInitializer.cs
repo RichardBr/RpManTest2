@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using RpMan.Domain.Entities;
 using RpMan.Domain.ValueObjects;
@@ -36,7 +37,9 @@ namespace RpMan.Persistence
                 return; // Db has been seeded
             }
 
-            SeedUsers(userManager, roleManager);
+            SeedRoles(roleManager, context).Wait();
+
+            SeedUsers(userManager, roleManager, context);
 
             SeedCustomers(context);
 
@@ -60,16 +63,21 @@ namespace RpMan.Persistence
 
         }
 
-        public void SeedUsers(UserManager<User> userManager, RoleManager<Role> roleManager)
+        private async Task SeedRoles(RoleManager<Role> roleManager, RpManDbContext context)
         {
-            var users = new[]
+            var roleGroups = new List<string>
             {
-                new User { UserName = "User001" },
-                new User { UserName = "User002" },
-                new User { UserName = "User003" },
-                new User { UserName = "Admin001" },
-                new User { UserName = "Admin002" },
+                "General",
+                "RoleGrp1",
+                "RoleGrp2"
             };
+            foreach (var roleGroup in roleGroups)
+            {
+                await context.AddAsync<UserRoleGroup>(new UserRoleGroup { Name = roleGroup });
+            }
+            await context.SaveChangesAsync();
+
+            UserRoleGroup userRoleGroupGeneral = context.UserRoleGroups.Single(x => x.Name == "General");
 
             var roles = new List<Role>
             {
@@ -81,8 +89,27 @@ namespace RpMan.Persistence
 
             foreach (var role in roles)
             {
-                roleManager.CreateAsync(role).Wait();
+                var result = await roleManager.RoleExistsAsync(role.Name);
+                if (!result)
+                {
+                    var userRoleGroupsRoleRec = new UserRoleGroupsRole { Role = role, UserRoleGroup = userRoleGroupGeneral };
+                    await context.UserRoleGroupsRoles.AddAsync(userRoleGroupsRoleRec);
+                    await roleManager.CreateAsync(role);
+                }
             }
+
+        }
+
+        public void SeedUsers(UserManager<User> userManager, RoleManager<Role> roleManager, RpManDbContext context)
+        {
+            var users = new[]
+            {
+                new User { UserName = "User001" },
+                new User { UserName = "User002" },
+                new User { UserName = "User003" },
+                new User { UserName = "Admin001" },
+                new User { UserName = "Admin002" },
+            };
 
             foreach (var user in users)
             {
