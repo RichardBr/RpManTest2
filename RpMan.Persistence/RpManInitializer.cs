@@ -77,7 +77,9 @@ namespace RpMan.Persistence
             }
             await context.SaveChangesAsync();
 
-            UserRoleGroup userRoleGroupGeneral = context.UserRoleGroups.Single(x => x.Name == "General");
+            UserRoleGroup userRoleGroupGeneral = context.UserRoleGroups.Single(x => x.Name == roleGroups[0]);
+            UserRoleGroup userRoleGroupRoleGrp1 = context.UserRoleGroups.Single(x => x.Name == roleGroups[1]);
+            UserRoleGroup userRoleGroupRoleGrp2 = context.UserRoleGroups.Single(x => x.Name == roleGroups[2]);
 
             var roles = new List<Role>
             {
@@ -93,6 +95,18 @@ namespace RpMan.Persistence
                 if (!result)
                 {
                     var userRoleGroupsRoleRec = new UserRoleGroupsRole { Role = role, UserRoleGroup = userRoleGroupGeneral };
+
+                    switch (role.Name)
+                    {
+                        case "Member":
+                            userRoleGroupsRoleRec = new UserRoleGroupsRole { Role = role, UserRoleGroup = userRoleGroupRoleGrp1 };
+                            break;
+                        case "Moderator":
+                            userRoleGroupsRoleRec = new UserRoleGroupsRole { Role = role, UserRoleGroup = userRoleGroupRoleGrp2 };
+                            break;
+                        Default:
+                            break;
+                    }
                     await context.UserRoleGroupsRoles.AddAsync(userRoleGroupsRoleRec);
                     await roleManager.CreateAsync(role);
                 }

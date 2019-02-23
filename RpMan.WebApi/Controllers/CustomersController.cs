@@ -8,6 +8,8 @@ using RpMan.Application.Customers.Commands.DeleteCustomer;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using RpMan.Application.CQRS.Customers.Queries.GetCustomersPagedList;
+using RpMan.WebApi.Helpers;
 
 namespace RpMan.WebApi.Controllers
 {
@@ -21,6 +23,21 @@ namespace RpMan.WebApi.Controllers
         public async Task<ActionResult<CustomersListViewModel>> GetAll()
         {
             return Ok(await Mediator.Send(new GetCustomersListQuery()));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<CustomersPagedListViewModel>> GetAllPagedList([FromQuery]GetCustomersPagedListQuery request)
+        {
+            var response = await Mediator.Send(request);
+
+            Response.AddPagination( response.Customers.CurrentPage
+                                  , response.Customers.PageSize
+                                  , response.Customers.TotalCount
+                                  , response.Customers.TotalPages
+                                  );
+
+            return Ok(response);
         }
 
         // GET api/customers/5

@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using System.Reflection;
+using RpMan.Application.CQRS.Roles.Models;
+using RpMan.Application.CQRS.Roles.Queries.GetRoleGroupList;
+using RpMan.Application.CQRS.Users.Commands.RegisterUser;
 using RpMan.Application.CQRS.Users.Models;
 using RpMan.Domain.Entities;
 
@@ -17,7 +20,10 @@ namespace RpMan.Application.Infrastructure.AutoMapper
         private void LoadConverters()
         {
             CreateMap<UserForRegisterDto, User>();
-            CreateMap<RpMan.Application.CQRS.Users.Commands.RegisterUser.RegisterUserCommand, User>();
+            CreateMap<RegisterUserCommand, User>();
+
+            // Lookups
+            CreateMap<UserRoleGroup, RoleGroupLookupModel>();
         }
 
         private void LoadStandardMappings()

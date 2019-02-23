@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RpMan.Application.CQRS.Users.Models;
+using RpMan.Application.CQRS.Users.Queries.GetUserDetail;
+using RpMan.Application.CQRS.Users.Queries.GetUsersList;
 using RpMan.Domain.Entities;
 using RpMan.Persistence;
 
@@ -39,8 +41,22 @@ namespace RpMan.WebApi.Controllers
             _context = context;
         }
 
-        [HttpGet("{id}", Name = "GetUser")]
-        public async Task<IActionResult> GetUser(int id)
+        // GET api/users
+        [HttpGet]
+        public async Task<ActionResult<UsersListViewModel>> GetAll()
+        {
+            return Ok(await Mediator.Send(new GetUsersListQuery()));
+        }
+
+        // GET api/customers/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserDetailModel>> Get(int id)
+        {
+            return Ok(await Mediator.Send(new GetUserDetailQuery { Id = id }));
+        }
+
+        [HttpGet("getoldway{id}", Name = "GetUser")]
+        public async Task<IActionResult> GetOldWay(int id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);

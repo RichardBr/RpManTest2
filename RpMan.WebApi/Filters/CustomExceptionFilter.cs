@@ -69,11 +69,28 @@ namespace RpMan.WebApi.Filters
 
             context.HttpContext.Response.ContentType = "application/json";
             context.HttpContext.Response.StatusCode = (int)code;
-            context.Result = new JsonResult(new
+            if (context.Exception.InnerException != null)
             {
-                error = new[] { context.Exception.Message },
-                stackTrace = context.Exception.StackTrace
-            });
+                context.Result = new JsonResult(new
+                {
+                    error = new[]
+                    {
+                        context.Exception.Message,
+                        context.Exception.InnerException.Message
+                    },
+                    stackTrace = context.Exception.StackTrace,
+                });
+            }
+            else
+            {
+                context.Result = new JsonResult(new
+                {
+                    error = new[] { context.Exception.Message },
+                    stackTrace = context.Exception.StackTrace
+                });
+            }
+
+
         }
     }
 }
